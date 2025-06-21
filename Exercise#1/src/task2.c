@@ -9,16 +9,16 @@ int task2(){
         printf("Задание№2\n");
         printf("Введите целое число от -128 до 127 включительно: ");
         scanf("%d",&x);
-        if(x<127 || x>-129){
+        if(x < 128 && x > -129){
             break;
         }
     }
     if(x>=0){
-        convert(x, binary);
+        convert(x, binary,7);
     }
     else{
         x *= -1;
-        convert(x, binary);
+        convert(x, binary,7);
         notBinary(binary);
         plusOne(binary);
     }
