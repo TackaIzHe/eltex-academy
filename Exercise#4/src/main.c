@@ -2,7 +2,7 @@
 #include "main.h"
 #include <stdio.h>
 
-int exit(int *isWork);
+int exitMain(int *isWork);
 int printMenu(int* sel);
 
 int main(){
@@ -27,10 +27,11 @@ int main(){
             getAll(mass, length);
             break;
         case 5:
-            exit(&isWork);
+            exitMain(&isWork);
             break;
         
         default:
+            printf("%d ",sel);
             printf("Нет такого действия\n");
             break;
         }
@@ -48,7 +49,7 @@ int printMenu(int* sel){
     return 0;
 }
 
-int exit(int* isWork){
+int exitMain(int* isWork){
     *isWork = 0;
     return 0;
 }

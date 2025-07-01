@@ -15,7 +15,7 @@ int search(struct abonent *mass, int length){
                 get(mass[i]);
                 break;
             }
-            else if(mass[i].name[j] = name[j]){
+            else if(mass[i].name[j] == name[j]){
                 continue;
             }
             break;
