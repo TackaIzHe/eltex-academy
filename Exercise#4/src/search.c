@@ -1,6 +1,6 @@
-#include <stdio.h>
-#include "main.h"
 #include "stract.h"
+#include "main.h"
+#include <stdio.h>
 
 int search(struct abonent *mass, int length){
     char name[10] = {0,0,0,0,0,0,0,0,0,0};
