@@ -1,4 +1,5 @@
 all:
+	mkdir -p bin
 	gcc src/add.c -g -c -o bin/add.o
 	gcc src/delete.c -g -c -o bin/delete.o
 	gcc src/get.c -g -c -o bin/get.o
