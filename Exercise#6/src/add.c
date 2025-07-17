@@ -42,7 +42,6 @@ int add(struct abonent **startObj, struct abonent **endObj, int *length)
         *endObj = newObj;
         return 0;
     }
-    get(**startObj);
     (*endObj)->next = newObj;
     newObj[0].prev = *endObj;
     *endObj = newObj;
