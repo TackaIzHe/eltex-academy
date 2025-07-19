@@ -139,6 +139,8 @@ int moveCurs()
             }
         }
     } while (input != 27);
+    clearList(&files1);
+    clearList(&files2);
     free(path1);
     free(path2);
     return 0;
