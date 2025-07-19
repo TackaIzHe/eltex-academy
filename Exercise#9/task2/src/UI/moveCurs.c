@@ -1,9 +1,9 @@
-#include <dirent.h>
 #include <ncurses.h>
 #include <malloc.h>
 #include <linux/limits.h>
 #include "UI.h"
 #include "../getFile.h"
+#include "../FileListFunc/FileListStruct.h"
 
 int moveUp(int *line, int x, int startPosy, int startPosLeftx)
 {
@@ -24,10 +24,10 @@ int moveDown(int *line, int x, int startPosy, int startPosLeftx)
 
 int moveCurs()
 {
-    struct dirent *files1;
-    struct dirent *files2;
-    files1 = malloc(sizeof(struct dirent));
-    files2 = malloc(sizeof(struct dirent));
+    struct FileList* files1;
+    struct FileList* files2;
+    files1 = 0;
+    files2 = 0;
     char *path1;
     char *path2;
     path1 = malloc(PATH_MAX);
@@ -45,19 +45,20 @@ int moveCurs()
     int rightLine = 0;
     attron(COLOR_PAIR(2));
     fillLine(x, startPosy, leftLine, startPosLeftx, " ");
-
+    getFileAndDir(&files1,path1);
+    getFileAndDir(&files2,path2);
     do
     {
         fillFileAndFolder(&files1, &files2, path1, path2);
         if (pos == 0)
         {
             fillLine(x, startPosy, rightLine, startPosRightx, " ");
-            mvprintw(startPosy+rightLine, startPosRightx, files2[rightLine].d_name);
+            mvprintw(startPosy+rightLine, startPosRightx, getItem(&files2,rightLine+1)->name);
         }
         else
         {
             fillLine(x, startPosy, leftLine, startPosLeftx, " ");
-            mvprintw(startPosy+leftLine, startPosLeftx, files1[leftLine].d_name);
+            mvprintw(startPosy+leftLine, startPosLeftx, getItem(&files1,leftLine+1)->name);
         }
         input = getch();
         if (input == '\t')
@@ -103,14 +104,14 @@ int moveCurs()
         {
             if (pos == 1)
             {
-                if (leftLine > 0 && (files1 + leftLine - 1)->d_name[0] != 0)
+                if (leftLine > 0 && getItem(&files1, leftLine)->name != 0)
                 {
                     moveUp(&leftLine, x, startPosy, startPosLeftx);
                 }
             }
             else
             {
-                if (rightLine > 0 && (files2 + rightLine - 1)->d_name[0] != 0)
+                if (rightLine > 0 && getItem(&files2, rightLine)->name != 0)
                 {
                     moveUp(&rightLine, x, startPosy, startPosRightx);
                 }
@@ -120,22 +121,24 @@ int moveCurs()
         {
             if (pos == 1)
             {
-                if (leftLine < y - 5 && (files1 + leftLine + 1)->d_name[0] != 0)
+                int i=0;
+                getLenght(&files1,&i);
+                if (leftLine < y - 5 && i > leftLine+1)
                 {
                     moveDown(&leftLine, x, startPosy, startPosLeftx);
                 }
             }
             else
             {
-                if (rightLine < y - 5 && (files2 + rightLine + 1)->d_name[0] != 0)
+                int i = 0;
+                getLenght(&files2,&i);
+                if (rightLine < y - 5 && i>rightLine+1)
                 {
                     moveDown(&rightLine, x, startPosy, startPosRightx);
                 }
             }
         }
     } while (input != 27);
-    free(files1);
-    free(files2);
     free(path1);
     free(path2);
     return 0;

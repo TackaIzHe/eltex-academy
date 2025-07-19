@@ -1,32 +1,34 @@
 #include <dirent.h>
 #include <malloc.h>
 #include <stdlib.h>
-#include <ncurses.h>
+#include "FileListFunc/FileListStruct.h"
 
-int getFileAndDir(struct dirent **files, int *length, char *path)
+int getFileAndDir(struct FileList** start, char *path)
 {
     DIR *dir;
     struct dirent *d;
     dir = opendir(path);
+    clearList(start);
     if (dir)
     {
         while ((d = readdir(dir)) != 0)
         {
-            *length = *length + 1;
-            *files = (struct dirent *)realloc(*files, sizeof(struct dirent) * *length);
-            if (*files < 0)
+            struct FileList* new;
+            new = (struct FileList *)malloc(sizeof(struct FileList));
+            if (new < 0)
             {
                 exit(EXIT_FAILURE);
             }
             for (int i = 0; i < sizeof(d->d_name); i++)
             {
-                (*files + *length - 1)->d_name[i] = d->d_name[i];
+                new->name[i] = d->d_name[i];
                 if (d->d_name[i] == '\0')
                 {
                     break;
                 }
             }
-            (*files + *length - 1)->d_type = d->d_type;
+            new->type = d->d_type;
+            push(start,&new);
         }
         closedir(dir);
     }
