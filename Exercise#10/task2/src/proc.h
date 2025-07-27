@@ -1,0 +1,1 @@
+int proc(char* name,int pid, int ppid);
