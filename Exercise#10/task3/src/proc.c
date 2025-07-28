@@ -14,6 +14,6 @@ int proc(char *comand)
     split(comand, &atr, &atrLenght);
     execProc(atr, atrLenght);
     wait(&status);
-    // free(atr);
+    free(atr);
     return 0;
 }

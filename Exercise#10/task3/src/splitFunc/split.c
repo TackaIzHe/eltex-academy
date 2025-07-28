@@ -11,11 +11,11 @@ int split(char* str, char*** atr, int* atrLenght){
         if(str[i]==' '){
             *atrLenght = *atrLenght + 1;
             *(atr) = realloc(*(atr),*atrLenght*8);
-            *(*(atr)+*atrLenght-1) = malloc(i+1 - prevInd);
+            *(*(atr)+*atrLenght-1) = malloc(i - prevInd);
             for(int j=prevInd;j<i;j++){
                 *(*(*(atr)+*atrLenght-1)+j-prevInd) = str[j];
             }
-            *(*(*(atr)+*atrLenght-1)+i+1 - prevInd) = '\0';
+            *(*(*(atr)+*atrLenght-1)+i - prevInd) = '\0';
             prevInd = i+1;
         }
     }
