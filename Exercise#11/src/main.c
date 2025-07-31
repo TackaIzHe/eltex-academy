@@ -16,6 +16,8 @@
 #include <malloc.h>
 #include "main.h"
 
+int WorkLoader = 1; 
+
 int main(){
     srand(time(NULL));
     int* store;
@@ -31,11 +33,14 @@ int main(){
         store[i] = 9000 + rand() % 1000;
     }
     init_thread_obj(&obj,3,1, &store, &busy);
-    printf("%d\n",(obj[0]->stores[0][1]));
     pthread_create(&buyer1,NULL,buyer_func,obj[0]);
     pthread_create(&buyer2,NULL,buyer_func,obj[1]);
     pthread_create(&buyer3,NULL,buyer_func,obj[2]);
     pthread_create(&loader,NULL,loader_func,obj[3]);
+    pthread_join(buyer1,NULL);
+    pthread_join(buyer2,NULL);
+    pthread_join(buyer3,NULL);
+    WorkLoader = 0;
     pthread_exit(NULL);
     for(int i=0;i<threadLenght;i++){
         free(obj[i]);

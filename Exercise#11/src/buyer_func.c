@@ -5,6 +5,7 @@
 #include "stdio.h"
 
 void* buyer_func(void* arg){
+    WorkLoader;
     struct thread_arg_struct* obj = (struct thread_arg_struct*)arg;
     srand(time(NULL));
     while(obj->potreb>0){

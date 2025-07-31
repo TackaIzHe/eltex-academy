@@ -6,7 +6,7 @@
 void* loader_func(void* arg){
     struct thread_arg_struct* obj = (struct thread_arg_struct*)arg;
     srand(time(NULL));
-    while(obj->potreb>0){
+    while(WorkLoader){
         int selectShop = rand() % 5;
         if(obj->busy[0][selectShop] == 0 ){
             obj->busy[0][selectShop] = 1;
