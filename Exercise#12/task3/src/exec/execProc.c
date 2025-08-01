@@ -20,7 +20,7 @@ int execProc(char** atr,int lenght){
     atr[lenght] = NULL;
     proc = fork();
     if(proc == 0){
-        char*** a;
+        char** a;
         find_pipe_line(atr,a);
         execv(binPath, atr);
         free(binPath);
