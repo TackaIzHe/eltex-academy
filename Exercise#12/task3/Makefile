@@ -1,6 +1,6 @@
 BIN := main
 OBJ1 := bin/main.o bin/menu.o bin/proc.o
-OBJ2 := bin/execProc.o bin/find_pipe_line.o
+OBJ2 := bin/execProc.o bin/find_pipe_line.o bin/move_arr.o bin/buff.o
 OBJ3 := bin/split.o
 BIN_DIR := bin
 SRC_DIR := src
