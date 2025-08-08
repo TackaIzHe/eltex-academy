@@ -34,10 +34,10 @@ int main(){
     }
     printf("%s\n", mess);
     mq_close(mq_req);
-    mq_unlink("/mqueue");
+    mq_unlink("/mqueue_req");
 
     mq_close(mq_res);
-    mq_unlink("/mqueue");
+    mq_unlink("/mqueue_res");
 
     exit(EXIT_SUCCESS);
 }
