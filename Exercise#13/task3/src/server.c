@@ -1,37 +1,30 @@
 #include <stdlib.h>
 #include <stdio.h>
-#include <mqueue.h>
-#include <fcntl.h>
 #include <pthread.h>
 #include <malloc.h>
 #include <string.h>
 #include "new_con.h"
 #include "thread_arg.h"
+#include <mqueue.h>
 
 int server_stat = 1; 
 
 int main(){
     pthread_t await_con_thread;
-    mqd_t mq;
+    mqd_t* connects;
+    connects = malloc(sizeof(mqd_t));
     char mess[256];
     char** users;
     users = malloc(8);
-    users[0] = malloc(4);
+    *users = malloc(4);
     users[0] = NULL;
     char** users_messages;
     users_messages = malloc(8);
-    users_messages[0] = malloc(4);
+    *users_messages = malloc(4);
     users_messages[0] = NULL;
-    struct mq_attr attr;
-    attr.mq_flags = 0;
-    attr.mq_maxmsg = 1;
-    attr.mq_msgsize = 256;
-    mq = mq_open("/mq_message", O_CREAT | O_RDWR, 0666, &attr);
-    if(mq == (mqd_t)-1){
-        perror("Ошибка создания очереди\n");
-        exit(EXIT_FAILURE);
-    }
+    
     struct thread_arg arg;
+    arg.connects = &connects;
     arg.users = &users;
     arg.users_messages = &users_messages;
     pthread_create(&await_con_thread,NULL,new_con,&arg);
@@ -44,10 +37,15 @@ int main(){
     }
     
     pthread_exit(NULL);
-    mq_close(mq);
-    mq_unlink("/mq_message");
+    for(int i = 0;users[i]!=NULL;i++){
+        free(users[i]);
+    }
     free(users);
+    for(int i = 0; users_messages[i]!=NULL;i++){
+        free(users_messages[i]);    
+    }
     free(users_messages);
+    free(connects);
 
     exit(EXIT_SUCCESS);
 }
