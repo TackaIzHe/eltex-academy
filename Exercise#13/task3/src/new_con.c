@@ -60,9 +60,11 @@ void* res_req_mq(void* arg){
 
     char mess[256];
 
+    mq_send(res,";;users-list;;",strlen(";;users-list;;"),0);
     for(int j = 0;j<a->user_lenght;j++){
         mq_send(res,a->users[0][j],256,0);
     }
+    mq_send(res,";;users-list-end;;",strlen(";;users-list-end;;"),0);
     
     for(int j = 0;j<a->count_message[0];j++){
         char buff[256];
@@ -71,6 +73,16 @@ void* res_req_mq(void* arg){
         strcat(buff,": ");
         strcat(buff,a->users_messages[0][j]->message);
         mq_send(res,buff,256,0);
+    }
+
+    
+    for(int j=0;j>=0;j++){
+        if(a->connects[0][0][j].req == 0){
+            break;
+        }
+        mq_send(a->connects[0][0][j].res,";;user-connect;;",strlen(";;user-connect;;")+1,0);
+        mq_send(a->connects[0][0][j].res,a->name,strlen(a->name)+1,0);
+        mq_send(a->connects[0][0][j].res,";;user-connect-end;;",strlen(";;user-connect-end;;")+1,0);
     }
 
     while(server_stat){
@@ -94,6 +106,7 @@ void* res_req_mq(void* arg){
             if(a->connects[0][0][i].req == 0){
                 break;
             }
+
             mq_send(a->connects[0][0][i].res,cur,strlen(cur)+1,0);
             i++;
         }
