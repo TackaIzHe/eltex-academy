@@ -43,4 +43,4 @@
 
 ### second
 
-[second/readme.md](tree/main/Exercise%2316/second/readme.md)
+[second/readme.md](Exercise%2316/second/readme.md)
