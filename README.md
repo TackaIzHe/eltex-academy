@@ -40,3 +40,7 @@
     3) AF_INET, SOCK_DGRAM
     4) AF_INET, SOCK_STREAM.
 ```
+
+### second
+
+![](./Exercise#16/second/readme.md)
