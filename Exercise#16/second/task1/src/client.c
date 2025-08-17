@@ -1,3 +1,4 @@
+#include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <sys/socket.h>
@@ -40,24 +41,34 @@ int main(){
 
     
     new_fd = socket(AF_INET, SOCK_STREAM, 0);
-    if(fd == -1){
+    if(new_fd == -1){
         handle_err("socond socket");
     }
     
     if(connect(new_fd, (struct sockaddr*)&server, sizeof(server)) == -1){
+        close(new_fd);
         handle_err("second connect");
     }
 
-    if( send(new_fd, "time", 5, 0) == -1 ){
-        handle_err("second recv");
-    }
-
-    if( recv(new_fd, buff, buff_len, 0) == -1 ){
-        handle_err("second recv");
-    }
-
-    printf("%s\n", buff);
+    while(1){
+        strcpy(buff,"");
+        scanf("%s",buff);
+        if( send(new_fd, buff, strlen(buff), 0) == -1 ){
+            close(new_fd);
+            handle_err("second recv");
+        }
+        if(strcmp(buff,"exit") == 0){
+           close(new_fd);
+           break; 
+        }
         
-    close(fd);
+        if( recv(new_fd, buff, buff_len, 0) == -1 ){
+            close(new_fd);
+            handle_err("second recv");
+        }
+        printf("%s\n", buff);
+        
+    }
+
     exit(EXIT_SUCCESS);
 }

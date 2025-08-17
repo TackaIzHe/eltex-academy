@@ -37,48 +37,63 @@ void *new_con(void *arg)
 
     if (bind(fd, (struct sockaddr *)&server, sizeof(server)) == -1)
     {
+        close(fd);
         handle_err("user bin");
     }
 
     if (listen(fd, 1) == -1)
     {
+        close(fd);
         handle_err("user listen");
     }
     client_len = sizeof(client);
     new_fd = accept(fd, (struct sockaddr *)&client, &client_len);
     if (new_fd == -1)
     {
+        close(fd);
         handle_err("user accept error");
     }
-
-    if (recv(new_fd, buff, buff_len, 0) == -1)
-    {
-        handle_err("user recv error");
-    }
-    printf("%s\n", buff);
-    if (strcmp("time", buff) == 0)
-    {
-        time_t rawtime;
-        struct tm *timeinfo;
-
-        time(&rawtime);                 
-        timeinfo = localtime(&rawtime); 
-
-        char buffer[80];
-
-        strftime(buffer, sizeof(buffer), "%Y-%m-%d %H:%M:%S", timeinfo);
-        printf("%s\n",buffer);
-        if (send(new_fd, buffer, strlen(buffer)+1, 0) == -1)
+    while(1){
+        if (recv(new_fd, buff, buff_len, 0) == -1)
         {
-            handle_err("user send err");
+            close(new_fd);
+            close(fd);
+            handle_err("user recv error");
         }
-    }
-    else
-    {
-        if (send(new_fd, "Not Found", 10, 0) == -1)
+        if (strcmp("time", buff) == 0)
         {
-            handle_err("user send err");
+            strcpy(buff,"");
+            time_t rawtime;
+            struct tm* timeinfo;
+            
+            time(&rawtime);
+            timeinfo = gmtime(&rawtime);
+
+            char buffer[80];
+            
+            
+            strftime(buffer, sizeof(buffer), "%Y-%m-%d %H:%M:%S", timeinfo);
+            if (send(new_fd, buffer, strlen(buffer) + 1, 0) == -1)
+            {
+                close(new_fd);
+                close(fd);
+                handle_err("user send err");
+            }
         }
+        else if(strcmp(buff,"exit")){
+            close(new_fd);
+            close(fd);
+            exit(EXIT_SUCCESS);    
+        }
+        else{
+            if (send(new_fd, "Not Found", 10, 0) == -1)
+            {
+                close(new_fd);
+                close(fd);
+                handle_err("user send err");
+            }
+        }
+        strcpy(buff,"");
     }
     close(fd);
     close(new_fd);

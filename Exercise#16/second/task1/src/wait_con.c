@@ -5,6 +5,7 @@
 #include <unistd.h>
 #include <string.h>
 #include <pthread.h>
+#include <sys/signal.h>
 #include "server.h"
 #include "pthread_arg.h"
 
@@ -12,9 +13,17 @@
 #define handle_err(msg)     \
     do { perror(msg); exit(EXIT_FAILURE); } while (0)
 
+int fd;
+
+void kill_proc(int){
+    close(fd);
+    printf("Выполнилось завершение процесса\n");
+    exit(EXIT_SUCCESS);
+}
+
 void *wait_con(void *)
 {
-    int fd;
+    signal(10,kill_proc);
     int client_fd;
     int id = PORT + 1;
     pthread_t con_thread;
@@ -37,11 +46,13 @@ void *wait_con(void *)
 
     if (bind(fd, (struct sockaddr *)&server, sizeof(server)) == -1)
     {
+        close(fd);
         handle_err("bind");
     }
 
     if (listen(fd, 200) == -1)
     {
+        close(fd);
         handle_err("listen");
     }
     while (1)
@@ -63,12 +74,14 @@ void *wait_con(void *)
         pthread_create(&con_thread, NULL, new_con, &cur_id);
         if (send(client_fd, &cur_id, 4, 0) == -1)
         {
+            close(fd);
+            close(client_fd);
             handle_err("send");
         }
-        close(client_fd);
         id++;
     }
-
+    pthread_exit(NULL);
+    close(client_fd);
     close(fd);
 
     exit(EXIT_SUCCESS);
