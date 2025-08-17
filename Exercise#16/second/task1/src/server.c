@@ -6,7 +6,6 @@
 #include <sys/signal.h>
 #include "server.h"
 
-#define PORT 2025
 #define handle_err(msg)\
     do{perror(msg); exit(EXIT_FAILURE);}while(0)
 

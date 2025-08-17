@@ -1,6 +1,6 @@
 BIN1 := server 
 BIN2 := client
-OBJ1 := bin/server.o bin/wait_con.o 
+OBJ1 := bin/server.o bin/wait_con.o bin/new_con.o
 OBJ2 := bin/client.o
 BIN_DIR := bin
 SRC_DIR := src
