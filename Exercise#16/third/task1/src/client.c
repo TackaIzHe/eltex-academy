@@ -26,9 +26,9 @@ int main(){
     if(fd == -1){
         handle_err("socket");
     }
-    if( setsockopt(fd, SOL_SOCKET, SO_REUSEADDR, &flag, sizeof(flag)) == -1){
-        handle_err("setsockopt err");
-    }
+    // if( setsockopt(fd, SOL_SOCKET, SO_BROADCAST, &flag, sizeof(flag)) == -1){
+    //     handle_err("setsockopt err");
+    // }
     if(bind(fd, (struct sockaddr*)&client, sizeof(client)) == -1){
         handle_err("bind");
     }
