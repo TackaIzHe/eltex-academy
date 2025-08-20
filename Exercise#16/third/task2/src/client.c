@@ -19,7 +19,6 @@ int main(){
     struct in_addr local_addr;
     struct ip_mreqn mreqn;
     
-    
     addr.s_addr = inet_addr("224.0.0.1");
     local_addr.s_addr = htonl(INADDR_ANY);
     mreqn.imr_multiaddr = addr;

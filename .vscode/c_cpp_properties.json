@@ -5,15 +5,18 @@
             "includePath": [
                 "${workspaceFolder}/**",
                 "/usr/include",
-                "/usr/local/include"
+                "/usr/local/include",
+                "/usr/include/netinet"
             ],
             "defines": [
-                "_POSIX_C_SOURCE=199309L"
+                "_POSIX_C_SOURCE=199309L",
+                "_GNU_SOURCE",
+                "__USE_MISC"
             ],
             "compilerPath": "/usr/bin/gcc",
             "cStandard": "c11",
             "cppStandard": "c++17",
-            "intelliSenseMode": "linux-gcc-x64"
+            "intelliSenseMode": "gcc-x64"
         }
     ],
     "version": 4
