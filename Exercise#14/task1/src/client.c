@@ -1,4 +1,5 @@
 #include <sys/shm.h>
+#include <sys/sem.h>
 #include <unistd.h>
 #include <fcntl.h>
 #include <stdio.h>
@@ -9,19 +10,36 @@
 do{ perror(msg); exit(EXIT_FAILURE);}while(0)
 
 int main(){
-    key_t key;
-    int fd;
+    key_t key_shm, key_sem;
+    int fd_shm, fd_sem;
     void* ukazatel;
- 
-    key = ftok("shm", 1);
-    if(key == -1){
-        handle_err("ftok err");
+    struct sembuf buf;
+
+    buf.sem_num = 0;
+    buf.sem_op = 1;
+    buf.sem_flg = 0;
+
+    key_shm = ftok("shm", 1);
+    if(key_shm == -1){
+        handle_err("ftok_shm err");
     }
-    fd = shmget(key, 1, 0666);
-    if(fd == -1){
+
+    key_sem = ftok("shm", 2);
+    if(key_sem == -1){
+        handle_err("ftok_sem err");
+    }
+
+    fd_shm = shmget(key_shm, 1, 0666);
+    if(fd_shm == -1){
         handle_err("shmget err");
     }
-    ukazatel = shmat(fd, 0, O_RDWR);
+
+    fd_sem = semget(key_sem, 1, 0666);
+    if(fd_sem == -1){
+        handle_err("semget err");
+    }
+
+    ukazatel = shmat(fd_shm, 0, O_RDWR);
     if(ukazatel == (void*)-1){
         handle_err("shmat err");
     }
@@ -29,6 +47,7 @@ int main(){
     printf("%s\n", ukazatel);
 
     strcpy(ukazatel, "Hello!");
+    semop(fd_sem, &buf, 1);
     shmdt(ukazatel);
 
     exit(EXIT_SUCCESS);
