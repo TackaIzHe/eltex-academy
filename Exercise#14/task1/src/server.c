@@ -55,6 +55,8 @@ int main(){
     printf("%s\n",ukazatel);
     
     shmdt(ukazatel);
+    shmctl(fd_shm, IPC_RMID, NULL);
+    semctl(fd_sem, 0, IPC_RMID);
     unlink("shm");
 
     exit(EXIT_SUCCESS);
