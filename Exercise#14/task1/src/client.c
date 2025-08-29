@@ -39,7 +39,7 @@ int main(){
         handle_err("semget err");
     }
 
-    ukazatel = shmat(fd_shm, 0, O_RDWR);
+    ukazatel = shmat(fd_shm, 0, 0);
     if(ukazatel == (void*)-1){
         handle_err("shmat err");
     }
