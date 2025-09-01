@@ -3,6 +3,7 @@
 #include <netinet/in.h>
 #include <sys/socket.h>
 #include <unistd.h>
+#include <string.h>
 
 #define HANDLE_ERR(msg) \
     do { perror(msg); exit(EXIT_FAILURE); } while(0)
@@ -20,7 +21,7 @@ int main(){
 
     server.sin_addr = server_addr;
     server.sin_family = AF_INET;
-    server.sin_port = PORT;
+    server.sin_port = htons(PORT);
     
     fd = socket(AF_INET, SOCK_DGRAM, 0);
     if(fd == -1){
@@ -37,8 +38,13 @@ int main(){
         close(fd);
         HANDLE_ERR("recvfrom err");
     }
-
     printf("%s\n", buff);
+    buff[1] = 'Q';
+    printf("%s\n", buff);
+    if(sendto(fd, buff, strlen(buff)+1, 0, (struct sockaddr*)&client, client_len) == -1){
+        close(fd);
+        HANDLE_ERR("recvfrom err");
+    }
     close(fd);
     
     exit(EXIT_SUCCESS);
