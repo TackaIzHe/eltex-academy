@@ -13,7 +13,6 @@
     do {perror(msg); exit(EXIT_FAILURE); } while(0)
 
 #define CLIENT_MAC_ADDR 0xcc5ef8832b3900
-#define SERVER_MAC_ADDR 0x744ca151c7cb00
 
 #define SERVER_PORT 5050
 #define CLIENT_PORT 5353
@@ -21,6 +20,7 @@
 int main(){
     int fd;
     int one = 1;
+    char SERVER_MAC_ADDR[] = {0x74, 0x4c, 0xa1, 0x51, 0xc7, 0xcb, 0x00};
     char buff[256];
     struct sockaddr_ll server, client;
     socklen_t server_len, client_len;
@@ -49,7 +49,7 @@ int main(){
     hdr_udp.check = 0;
 
     int index = if_nametoindex("wlan0");
-    strcpy(server.sll_addr, SERVER_MAC_ADDR);
+    memcpy(server.sll_addr, SERVER_MAC_ADDR, 7);
     server.sll_family = AF_PACKET;
     server.sll_halen = 6;
     server.sll_ifindex = index;
