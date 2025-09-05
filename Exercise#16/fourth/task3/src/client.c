@@ -52,21 +52,21 @@ int main(){
     hdr_eth.h_proto = htons(ETH_P_IP);
     memcpy(hdr_eth.h_source, CLIENT_MAC_ADDR, 6);
     
-    
-    hdr_ip.version = 4;
-    hdr_ip.ihl = 5;
-    hdr_ip.tos = 0;
-    hdr_ip.tot_len = htons(sizeof(hdr_ip) + sizeof(hdr_udp) + 4);
-    hdr_ip.id = 0;
-    hdr_ip.frag_off = 0;
-    hdr_ip.ttl = 255;
-    hdr_ip.protocol = 17;
-    hdr_ip.saddr = inet_addr("192.168.0.11");
-    hdr_ip.daddr = inet_addr("192.168.0.17");
-    
     hdr_udp.source = htons(CLIENT_PORT);
     hdr_udp.dest = htons(SERVER_PORT);
     hdr_udp.len = htons(sizeof(hdr_udp) + 4);
+    
+    hdr_ip.tot_len = htons(sizeof(hdr_ip) + sizeof(hdr_udp) + 4);
+    hdr_ip.protocol = htons(17);
+    hdr_ip.saddr = inet_addr("192.168.0.11");
+    hdr_ip.daddr = inet_addr("192.168.0.17");
+    hdr_ip.check = 0;
+    hdr_ip.ihl = 0;
+    hdr_ip.tos = 0;
+    hdr_ip.id = htons(-4);
+    hdr_ip.frag_off = 0;
+    hdr_ip.ttl = 0;
+    hdr_ip.version = 0;
     
     int index = if_nametoindex("wlan0");
     memcpy(server.sll_addr, SERVER_MAC_ADDR, 6);
@@ -87,9 +87,20 @@ int main(){
     memcpy(buff + sizeof(hdr_eth), &hdr_ip, sizeof(hdr_ip));
     memcpy(buff + sizeof(hdr_eth) + sizeof(hdr_ip), &hdr_udp, sizeof(hdr_udp));
     memcpy(data , "HI!", (size_t)4);
-    
+
+    hdr_udp.check = ip_checksum(buff+ sizeof(hdr_eth), 10 + 10 + 4);
+
+    hdr_ip.protocol = 17;
+    hdr_ip.ihl = 5;
+    hdr_ip.tos = 0;
+    hdr_ip.id = 0;
+    hdr_ip.frag_off = 0;
+    hdr_ip.ttl = 255;
+    hdr_ip.version = 4;
+
+    memcpy(buff + sizeof(hdr_eth), &hdr_ip, sizeof(hdr_ip));
+
     hdr_ip.check = ip_checksum(buff+ sizeof(hdr_eth), 10);
-    hdr_udp.check = ip_checksum(buff+ sizeof(hdr_eth) , 10 + 8 + 4);
     
     
     memcpy(buff, &hdr_eth, sizeof(hdr_eth));
