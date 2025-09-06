@@ -33,10 +33,10 @@ unsigned short ip_checksum(void* vdata, size_t length) {
 
 int main(){
     int fd;
+    struct sockaddr_ll server;
     char CLIENT_MAC_ADDR[] = {0xcc, 0x5e, 0xf8, 0x83, 0x2b, 0x39};
     char SERVER_MAC_ADDR[] = {0x74, 0x4c, 0xa1, 0x51, 0xc7, 0xcb};
     char buff[256];
-    struct sockaddr_ll server, client;
     socklen_t server_len, client_len;
     struct in_addr server_addr;
     struct udphdr hdr_udp;
@@ -44,6 +44,16 @@ int main(){
     struct iphdr *recfpac_ip;
     struct udphdr *recfpac_udp;
     struct ethhdr hdr_eth;
+    
+    int index = if_nametoindex("wlan0");
+    memcpy(server.sll_addr, SERVER_MAC_ADDR, 6);
+    server.sll_family = AF_PACKET;
+    server.sll_halen = 6;
+    server.sll_ifindex = index;
+    server.sll_hatype = 0;
+    server.sll_pkttype = 0;
+    server.sll_protocol = 0;
+    
     memset(buff, 0, sizeof(buff));
     
     char *data = buff + sizeof(hdr_eth) + sizeof(hdr_ip) + sizeof(hdr_udp);
@@ -56,27 +66,11 @@ int main(){
     hdr_udp.dest = htons(SERVER_PORT);
     hdr_udp.len = htons(sizeof(hdr_udp) + 4);
     
-    hdr_ip.tot_len = htons(sizeof(hdr_ip) + sizeof(hdr_udp) + 4);
-    hdr_ip.protocol = htons(17);
     hdr_ip.saddr = inet_addr("192.168.0.11");
     hdr_ip.daddr = inet_addr("192.168.0.17");
     hdr_ip.check = 0;
-    hdr_ip.ihl = 0;
-    hdr_ip.tos = 0;
-    hdr_ip.id = htons(-4);
-    hdr_ip.frag_off = 0;
-    hdr_ip.ttl = 0;
-    hdr_ip.version = 0;
-    
-    int index = if_nametoindex("wlan0");
-    memcpy(server.sll_addr, SERVER_MAC_ADDR, 6);
-    server.sll_family = AF_PACKET;
-    server.sll_halen = 6;
-    server.sll_ifindex = index;
-    server.sll_hatype = 0;
-    server.sll_pkttype = 0;
-    server.sll_protocol = 0;
-    
+    hdr_ip.protocol = 17;
+    hdr_ip.tot_len = htons(sizeof(hdr_udp) + 4);
     
     fd = socket(AF_PACKET, SOCK_RAW, htons(ETH_P_ALL));
     if(fd == -1){
@@ -87,16 +81,16 @@ int main(){
     memcpy(buff + sizeof(hdr_eth), &hdr_ip, sizeof(hdr_ip));
     memcpy(buff + sizeof(hdr_eth) + sizeof(hdr_ip), &hdr_udp, sizeof(hdr_udp));
     memcpy(data , "HI!", (size_t)4);
-
+    
     hdr_udp.check = ip_checksum(buff+ sizeof(hdr_eth), 10 + 10 + 4);
-
-    hdr_ip.protocol = 17;
+    
+    hdr_ip.version = 4;
     hdr_ip.ihl = 5;
     hdr_ip.tos = 0;
     hdr_ip.id = 0;
     hdr_ip.frag_off = 0;
     hdr_ip.ttl = 255;
-    hdr_ip.version = 4;
+    hdr_ip.tot_len = htons(sizeof(hdr_ip) + sizeof(hdr_udp) + 4);
 
     memcpy(buff + sizeof(hdr_eth), &hdr_ip, sizeof(hdr_ip));
 
@@ -112,28 +106,27 @@ int main(){
         close(fd);
         HANDLE_ERR("sendto err");
     }
-    
-    // memset(buff, 0, sizeof(buff));
-    // client_len = sizeof(client);
-    // while(1){
-    //     if(recvfrom(fd, buff, sizeof(buff), 0, 0, 0) == -1){
-    //         close(fd);
-    //         HANDLE_ERR("recvfrom err");
-    //     }
-    //     recfpac_ip = (struct iphdr*)buff;
-    //     int iphdr_len = recfpac_ip->ihl*4;
-    //     recfpac_udp = (struct udphdr*) buff + iphdr_len;
-    //     short* sours_port = (short*)(buff + iphdr_len);
-    //     short* dest_port = (short*)(buff + iphdr_len + 2);
-    //     char* payload = buff + iphdr_len + 8;
-    //     printf("source port: %d\n", htons(*sours_port));
-    //     printf("dest port: %d\n", htons(*dest_port));
-    //     printf("payload: %s\n", payload);
-    //     if(htons(*sours_port) == SERVER_PORT){
-    //         break;
-    //     }
 
-    // }
+    memcpy(server.sll_addr, CLIENT_MAC_ADDR, 6);
+    
+    while(1){
+        memset(buff, 0, sizeof(buff));
+        client_len = sizeof(server);
+        if(recvfrom(fd, buff, sizeof(buff), 0, (struct sockaddr*)&server, &client_len) == -1){
+            close(fd);
+            HANDLE_ERR("recvfrom err");
+        }
+        short* sours_port = (short*)(buff + sizeof(hdr_eth) + sizeof(hdr_ip));
+        short* dest_port = (short*)(buff + sizeof(hdr_eth) + sizeof(hdr_ip) + 2);
+        char* payload = buff + sizeof(hdr_eth) + sizeof(hdr_ip) + sizeof(hdr_udp);
+        printf("source port: %d\n", htons(*sours_port));
+        printf("dest port: %d\n", htons(*dest_port));
+        printf("payload: %s\n", payload);
+        if(htons(*sours_port) == SERVER_PORT){
+            break;
+        }
+
+    }
 
     close(fd);
 

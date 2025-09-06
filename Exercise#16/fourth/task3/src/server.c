@@ -4,11 +4,12 @@
 #include <sys/socket.h>
 #include <unistd.h>
 #include <string.h>
+#include <arpa/inet.h>
 
 #define HANDLE_ERR(msg) \
     do { perror(msg); exit(EXIT_FAILURE); } while(0)
 
-#define PORT 5050
+#define PORT 50501
 
 int main(){
     int fd;
@@ -17,7 +18,7 @@ int main(){
     struct sockaddr_in server, client;
     struct in_addr server_addr;
 
-    server_addr.s_addr = htonl(INADDR_LOOPBACK);
+    server_addr.s_addr = inet_addr("192.168.0.17");
 
     server.sin_addr = server_addr;
     server.sin_family = AF_INET;
