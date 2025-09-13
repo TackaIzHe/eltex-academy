@@ -56,3 +56,5 @@
 [third/readme.md](Exercise%2316/fourth/readme.md)
 
 ## Exercise#17 - Ядро linux
+
+[readme.md](Exercise%2317/readme.md)
