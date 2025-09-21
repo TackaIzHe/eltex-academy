@@ -49,3 +49,7 @@
 ## Exercise#17 - Ядро linux
 
 [readme.md](Exercise%2317/readme.md)
+
+## Exercise#18 - Корневая файловая система
+
+[readme.md](Exercise%2318/readme.md)
