@@ -53,3 +53,7 @@
 ## Exercise#18 - Корневая файловая система
 
 [readme.md](Exercise%2318/readme.md)
+
+## Exercise#19 - Кросс-компиляция
+
+[readme.md](Exercise%2319/readme.md)
