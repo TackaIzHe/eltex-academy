@@ -60,6 +60,6 @@
 
 ## Exercise#20 - Модули ядра Linux
 
-## Exercise#21 - raw sockets + САОД + signals (Вырускное задание №1)
+## Exercise#21 - raw sockets + САОД + signals (Выпускное задание №1)
 
-## Exercise#22 - fork + poll/epoll/select + timers + IPC (Вырускное задание №2)
+## Exercise#22 - fork + poll/epoll/select + timers + IPC (Выпускное задание №2)
