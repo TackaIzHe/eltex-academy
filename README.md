@@ -57,3 +57,9 @@
 ## Exercise#19 - Кросс-компиляция
 
 [readme.md](Exercise%2319/readme.md)
+
+## Exercise#20 - Модули ядра Linux
+
+## Exercise#21 - raw sockets + САОД + signals (Вырускное задание №1)
+
+## Exercise#22 - fork + poll/epoll/select + timers + IPC (Вырускное задание №2)
