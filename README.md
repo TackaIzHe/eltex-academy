@@ -60,6 +60,8 @@
 
 ## Exercise#20 - Модули ядра Linux
 
+[readme.md](Exercise%2320/readme.md)
+
 ## Exercise#21 - raw sockets + САОД + signals (Выпускное задание №1)
 
 ## Exercise#22 - fork + poll/epoll/select + timers + IPC (Выпускное задание №2)
