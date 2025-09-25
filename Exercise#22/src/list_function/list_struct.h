@@ -6,6 +6,10 @@
 struct list_drivers{
     pid_t pid_driver;
     char status[10];
+    struct list_drivers* next;
+    struct list_drivers* lees;
+    struct list_drivers* last;
+
 };
 
 

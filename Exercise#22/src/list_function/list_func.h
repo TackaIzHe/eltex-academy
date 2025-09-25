@@ -3,7 +3,15 @@
 
 #include "list_struct.h"
 
-int add(struct list_drivers** list , pid_t pid, int* lenght);
+int add(struct list_drivers* list , pid_t pid, int* lenght);
 int get_all(struct list_drivers* list, int lenght);
+
+//void* a = get(drivers,100,list_lenght); 
+//struct list_drivers* c = (struct list_drivers*)a;
+void* get(struct list_drivers* list , pid_t pid, int lenght); 
+
+int del(struct list_drivers* list, pid_t pid, int* lenght);
+
+int free_list(struct list_drivers* list);
 
 #endif

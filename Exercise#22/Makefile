@@ -14,7 +14,7 @@ bin/comand_function/get_drivers.o bin/comand_function/get_status.o bin/comand_fu
 
 DRIVER_FUNC_OBJ := bin/driver_function/init_driver.o bin/driver_function/sig_to_driver.o
 
-LIST_FUNC_OBJ := bin/list_function/add.o bin/list_function/del.o bin/list_function/get_all.o bin/list_function/get.o
+LIST_FUNC_OBJ := bin/list_function/add.o bin/list_function/del.o bin/list_function/get_all.o bin/list_function/get.o bin/list_function/free_list.o
 
 .PHONY: all MAKE_DIRS clean
 
