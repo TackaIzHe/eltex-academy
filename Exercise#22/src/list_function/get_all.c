@@ -5,7 +5,7 @@
 int get_all(struct list_drivers* list, int lenght){
     printf("\n");
     char space[10] = "_________";
-    struct list_drivers* cur = list;
+    struct list_drivers* cur = list->next;
     for(int i=0;i<lenght;i++){
         int count=8;
         for(int j=10;j<=cur[0].pid_driver;j*=10){
