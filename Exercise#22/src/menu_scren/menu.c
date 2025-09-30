@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include "../convert/convert.h"
+#include "../driver_function/sem_shm.h"
 #include "../comand_function/comand_func.h"
 
 int menu(void** addr_shm){ 
@@ -25,6 +26,7 @@ int menu(void** addr_shm){
 
         if(strcmp(lex[0],"create_driver") == 0){
             create_driver(addr_shm);
+            reopen_shm(addr_shm);
             continue;
         }
         else if(strcmp(lex[0],"send_task") == 0){ //<pid><timer>
