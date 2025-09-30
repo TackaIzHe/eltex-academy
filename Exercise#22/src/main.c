@@ -6,29 +6,25 @@
 #include "menu_scren/menu.h"
 #include "driver_function/sem_shm.h"
 
+
 int main(){
-    struct list_drivers* drivers;
-    drivers = malloc(sizeof(struct list_drivers));
+    void* addr_shm;  
+    sem_t* sem;
+    struct list_drivers drivers;
+    drivers.last = 0;
+    drivers.lees = 0;
+    drivers.next = 0;
 
-    menu(drivers);
+    init_mman(drivers, &addr_shm, &sem);
 
-    if( munmap(addr_shm, SHM_LENGHT) == -1){
-        perror("munmap err");
-    }
+    printf("help показывает список програм \n");
+    printf("create_driver создаёт driver\n");
+    printf("send_task <pid> <timer> отпровляет команду driver\n");
+    printf("get_status <pid> показывает статус driver\n");
+    printf("get_drivers отоброжает всех driver\n");
+    printf("exit завершение програмы\n");
 
-    if( sem_close(sem) == -1){
-        perror("sem_close err");
-    }
-
-    if( shm_unlink(SHM_PATH) == -1){
-        perror("shm_unlink err");
-    }
-
-    if( sem_unlink(SEM_PATH) == -1){
-        perror("sem_unlink err");
-    }
- 
-
-    free_list(drivers);
+    menu(&addr_shm);
+    close_mman(addr_shm, sem);
     exit(EXIT_SUCCESS);
 }

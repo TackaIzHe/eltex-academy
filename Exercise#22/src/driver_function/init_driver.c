@@ -10,17 +10,20 @@
 #include "../convert/convert.h"
 #include "ini_queue.h"
 #include "mess_struct.h"
+#include "sem_shm.h"
 
 #define max_fds 1
 
 #define handle_err(msg)\
     do{perror(msg);}while(0)
 
-int init_driver(struct list_drivers* list, int* lenght){
+int init_driver(void** lenght_and_list){
     pid_t pid;
     int status;
     pid = fork();
     if(pid == 0){
+        struct list_drivers* start = (struct list_drivers*)(*lenght_and_list+4);
+        int* lenght = (int*)*lenght_and_list;
         char name_queue[10];
         int pid = getpid();
         int epoll;
@@ -30,9 +33,10 @@ int init_driver(struct list_drivers* list, int* lenght){
         struct epoll_event epoll_fd;
         struct epoll_event repoll_fds[max_fds];
         epoll = epoll_create(0);
-        add(list,pid,lenght);
-        printf("Драйвер создан PID: %d\n", pid);
 
+        add(start,pid,lenght);
+        printf("Драйвер создан PID: %d\n", pid);
+        
         epoll = epoll_create1(0);
 
         convert_int_to_char(pid, name_queue, 10);
@@ -62,7 +66,7 @@ int init_driver(struct list_drivers* list, int* lenght){
                     cur_time = time(NULL);
                     convert_char_to_int(buff,&timer);
                     cur_time += timer;
-                    struct list_drivers* cur_item = (struct list_drivers*)get(list,pid,*lenght);
+                    struct list_drivers* cur_item = (struct list_drivers*)get(start,pid,*lenght);
                     strcpy(cur_item->status, "Busy");
                     if( mq_send(queue_res,"OK",3,0) == -1){
                         perror("Ошибка отправки сообщения\n");
@@ -77,16 +81,11 @@ int init_driver(struct list_drivers* list, int* lenght){
                 ev_count--;
             }
             if((cur_time != 0) && (cur_time<=time(NULL))){
-                struct list_drivers* cur_item = (struct list_drivers*)get(list,pid,*lenght);
-                strcpy(cur_item->status, "Avalible");
+                struct list_drivers* cur_item = (struct list_drivers*)get(start,pid,*lenght);
+                strcpy(cur_item->status, "Available");
             }
         }
-        
     }else{
         return 0;   
     }
 }
-//для создания очередей использовать systemV
-//создать 2 очереди одна для получения другая для отправки дочернему процесу
-//создать epoll для двух очередей
-//слушать очередь при получении команды засыпать просыпаться и отпровлять в очередь сообщение и поновой

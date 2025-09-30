@@ -10,8 +10,4 @@ int get_all(struct list_drivers* list, int lenght);
 //struct list_drivers* c = (struct list_drivers*)a;
 void* get(struct list_drivers* list , pid_t pid, int lenght); 
 
-int del(struct list_drivers* list, pid_t pid, int* lenght);
-
-int free_list(struct list_drivers* list);
-
 #endif

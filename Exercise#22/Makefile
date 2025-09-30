@@ -14,10 +14,10 @@ OBJ := bin/main.o
 COMAND_FUNC_OBJ := bin/comand_function/create_driver.o bin/comand_function/del_driver.o \
 bin/comand_function/get_drivers.o bin/comand_function/get_status.o bin/comand_function/send_task.o
 
-DRIVER_FUNC_OBJ := bin/driver_function/init_driver.o bin/driver_function/get_mess_from_drivers.o bin/driver_function/send_mess_to_driver.o bin/driver_function/init_qmess.o\
-bin/driver_function/init_mman.o
+DRIVER_FUNC_OBJ := bin/driver_function/init_driver.o bin/driver_function/send_mess_to_driver.o bin/driver_function/init_qmess.o\
+bin/driver_function/init_mman.o bin/driver_function/close_mman.o
 
-LIST_FUNC_OBJ := bin/list_function/add.o bin/list_function/del.o bin/list_function/get_all.o bin/list_function/get.o bin/list_function/free_list.o
+LIST_FUNC_OBJ := bin/list_function/add.o bin/list_function/get_all.o bin/list_function/get.o
 
 MENU_SCREN_OBJ := bin/menu_scren/menu.o
 

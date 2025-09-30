@@ -3,8 +3,7 @@
 #include "../convert/convert.h"
 #include "../comand_function/comand_func.h"
 
-int menu(struct list_drivers* list){  
-    int list_lenght = 0;
+int menu(void** addr_shm){ 
     char start_lex_word[1] = "";  
     char buff[256];  
     char *lex[3];  
@@ -25,8 +24,7 @@ int menu(struct list_drivers* list){
         }
 
         if(strcmp(lex[0],"create_driver") == 0){
-            create_driver(list, &list_lenght);
-            list_lenght++;
+            create_driver(addr_shm);
             continue;
         }
         else if(strcmp(lex[0],"send_task") == 0){ //<pid><timer>
@@ -38,7 +36,7 @@ int menu(struct list_drivers* list){
             int timer =0;
             convert_char_to_int(lex[1],&pid);
             convert_char_to_int(lex[2],&timer);
-            send_task(pid, timer, &list_lenght);
+            send_task(pid, timer);
             continue;
         }
         else if(strcmp(lex[0],"get_status") == 0){ //<pid>
@@ -48,21 +46,11 @@ int menu(struct list_drivers* list){
             }
             int pid =0;
             convert_char_to_int(lex[1],&pid);
-            get_status(pid, &list_lenght);
+            get_status(pid);
             continue;
         }
         else if(strcmp(lex[0],"get_drivers") == 0){
-            get_drivers(list, &list_lenght);
-            continue;
-        }
-        else if(strcmp(lex[0],"del_driver") == 0){ //<pid>
-            if(strcmp(lex[1],"") == 0){
-                printf("Укажите pid\n");
-                continue;
-            }
-            int pid =0;
-            convert_char_to_int(lex[1],&pid);
-            del_driver(pid, &list_lenght);
+            get_drivers(addr_shm);
             continue;
         }
         else if(strcmp(lex[0],"help") == 0){
@@ -71,7 +59,6 @@ int menu(struct list_drivers* list){
             printf("send_task <pid> <timer> отпровляет команду driver\n");
             printf("get_status <pid> показывает статус driver\n");
             printf("get_drivers отоброжает всех driver\n");
-            printf("del_driver <pid> удаляет driver\n");
             printf("exit завершение програмы\n");
             continue;
         }
