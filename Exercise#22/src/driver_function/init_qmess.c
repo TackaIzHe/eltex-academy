@@ -12,7 +12,7 @@ int init_qmess(char* name_queue, int* queue_res, int* queue_req){
     struct mq_attr attr;
     attr.mq_flags = 0;
     attr.mq_maxmsg = 2;
-    attr.mq_msgsize = sizeof(struct mess);
+    attr.mq_msgsize = 8;
     strcat(name_queue,"s");
     char new_name[strlen(name_queue)+1];
     new_name[0] = '/';

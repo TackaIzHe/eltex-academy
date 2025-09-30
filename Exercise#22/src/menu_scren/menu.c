@@ -26,6 +26,7 @@ int menu(struct list_drivers* list){
 
         if(strcmp(lex[0],"create_driver") == 0){
             create_driver(list, &list_lenght);
+            list_lenght++;
             continue;
         }
         else if(strcmp(lex[0],"send_task") == 0){ //<pid><timer>
@@ -78,7 +79,6 @@ int menu(struct list_drivers* list){
             break;
         }
         printf("Нет такой команды\n");
-        
 
     }
     

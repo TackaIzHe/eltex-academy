@@ -1,5 +1,5 @@
 #include "../list_function/list_func.h"
 
 int get_drivers(struct list_drivers* list, int* lenght){
-    
+    get_all(list,*lenght);
 }

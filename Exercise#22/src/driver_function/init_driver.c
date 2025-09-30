@@ -53,28 +53,31 @@ int init_driver(struct list_drivers* list, int* lenght){
         while(1){
             ev_count = epoll_wait(epoll, repoll_fds, max_fds, 1000);
             if(ev_count>0){
-                struct mess* mess_buff;
-                char buff[sizeof(mess_buff)];
-                if( mq_receive(repoll_fds[0].data.fd,buff,sizeof(struct mess),0) == -1){
+                char buff[100];
+                if( mq_receive(repoll_fds[0].data.fd,buff,100,0) == -1){
                     perror("Ошибка получения сообщения\n");
                 }
-                mess_buff = (struct mess*)buff;
                 if(cur_time<= time(NULL)){
+                    int timer = 0;
                     cur_time = time(NULL);
-                    cur_time += mess_buff->timer;
-                    struct list_drivers* cur_item = (struct list_drivers*)get(list,pid,lenght);
+                    convert_char_to_int(buff,&timer);
+                    cur_time += timer;
+                    struct list_drivers* cur_item = (struct list_drivers*)get(list,pid,*lenght);
                     strcpy(cur_item->status, "Busy");
+                    if( mq_send(queue_res,"OK",3,0) == -1){
+                        perror("Ошибка отправки сообщения\n");
+                    }
                 }
                 else{
-                    struct mess mess_buff;
-                    strcpy(mess_buff.status, "Busy");
-                    if( mq_send(queue_res,buff,sizeof(struct mess),0) == -1){
-                    perror("Ошибка получения сообщения\n");
+                    strcpy(buff, "Busy");
+                    if( mq_send(queue_res,buff,5,0) == -1){
+                        perror("Ошибка отправки сообщения\n");
+                    }
                 }
-                }
+                ev_count--;
             }
             if((cur_time != 0) && (cur_time<=time(NULL))){
-                struct list_drivers* cur_item = (struct list_drivers*)get(list,pid,lenght);
+                struct list_drivers* cur_item = (struct list_drivers*)get(list,pid,*lenght);
                 strcpy(cur_item->status, "Avalible");
             }
         }
