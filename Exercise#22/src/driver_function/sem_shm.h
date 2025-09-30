@@ -5,10 +5,10 @@
 #include "../list_function/list_struct.h"
 
 #define SHM_PATH "/shm_file"
-#define SEM_PATH "/sem_file"
 #define SHM_LENGHT 3096
 
-int init_mman(struct list_drivers list, void** addr_shm, sem_t** sem);
-int close_mman(void* addr_shm, sem_t* sem);
+int init_mman(struct list_drivers list, void** addr_shm);
+int reopen_shm(void** addr_shm);
+int close_mman(void* addr_shm);
 
 #endif

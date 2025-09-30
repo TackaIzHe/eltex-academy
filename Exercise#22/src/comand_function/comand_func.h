@@ -8,5 +8,6 @@ int create_driver(void** addr_shm);
 int send_task(pid_t pid, int timer);
 int get_status(pid_t pid);
 int get_drivers(void** addr_shm);
+int send_comand(pid_t pid, char* comand);
 
 #endif

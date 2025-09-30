@@ -10,9 +10,14 @@ int send_mess_to_driver(int pid, struct mess mess){
     name_mqueue[0] ='/';
     name_mqueue[1] = '\0';
     char timer[8];
-
+    if(strcmp(mess.status, "stat") == 0){
+        strcpy(timer,mess.status);
+    }else if(strcmp(mess.status, "exit") == 0){
+        strcpy(timer,mess.status);
+    }else{
+        convert_int_to_char(mess.timer,timer,8);
+    }
     convert_int_to_char(pid, int_char, 10);
-    convert_int_to_char(mess.timer,timer,8);
     strcat(name_mqueue,int_char);
     strcat(name_mqueue,"s");
     

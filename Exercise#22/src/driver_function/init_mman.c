@@ -6,17 +6,13 @@
 #include <unistd.h>
 #include "sem_shm.h"
 
-int init_mman(struct list_drivers list, void** addr_shm, sem_t** sem){
+int init_mman(struct list_drivers list, void** addr_shm){
 
     int fd;
 
     fd = shm_open(SHM_PATH, O_CREAT | O_RDWR, 0666);
     if(fd == -1){
         perror("shm_open err");
-    }
-    *sem = sem_open(SEM_PATH, O_CREAT | O_RDWR, 0666, 0);
-    if(*sem == SEM_FAILED){
-        perror("sem_open err");
     }
 
     if( ftruncate(fd, SHM_LENGHT) == -1){

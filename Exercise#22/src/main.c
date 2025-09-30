@@ -5,17 +5,16 @@
 #include "list_function/list_func.h"
 #include "menu_scren/menu.h"
 #include "driver_function/sem_shm.h"
-
+#include "main.h"
 
 int main(){
-    void* addr_shm;  
-    sem_t* sem;
+    void* addr_shm;
     struct list_drivers drivers;
     drivers.last = 0;
     drivers.lees = 0;
     drivers.next = 0;
 
-    init_mman(drivers, &addr_shm, &sem);
+    init_mman(drivers, &addr_shm);
 
     printf("help показывает список програм \n");
     printf("create_driver создаёт driver\n");
@@ -25,6 +24,8 @@ int main(){
     printf("exit завершение програмы\n");
 
     menu(&addr_shm);
-    close_mman(addr_shm, sem);
+    
+    kill_child_proc(&addr_shm);
+    close_mman(addr_shm);
     exit(EXIT_SUCCESS);
 }

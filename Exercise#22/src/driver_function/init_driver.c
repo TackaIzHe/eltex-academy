@@ -21,7 +21,9 @@ int init_driver(void** lenght_and_list){
     pid_t pid;
     int status;
     pid = fork();
+    printf("%d\n",pid);
     if(pid == 0){
+        reopen_shm(lenght_and_list);
         struct list_drivers* start = (struct list_drivers*)(*lenght_and_list+4);
         int* lenght = (int*)*lenght_and_list;
         char name_queue[10];
@@ -33,7 +35,6 @@ int init_driver(void** lenght_and_list){
         struct epoll_event epoll_fd;
         struct epoll_event repoll_fds[max_fds];
         epoll = epoll_create(0);
-
         add(start,pid,lenght);
         printf("Драйвер создан PID: %d\n", pid);
         
@@ -61,7 +62,21 @@ int init_driver(void** lenght_and_list){
                 if( mq_receive(repoll_fds[0].data.fd,buff,100,0) == -1){
                     perror("Ошибка получения сообщения\n");
                 }
-                if(cur_time<= time(NULL)){
+                if(strcmp(buff,"stat") == 0){
+                    struct list_drivers* cur_item = (struct list_drivers*)get(start,pid,*lenght);
+                    cur_item->status[7] = '\0';
+                    if( mq_send(queue_res,cur_item->status,8,0) == -1){
+                        perror("Ошибка отправки сообщения\n");
+                    }
+                }
+                else if(strcmp(buff, "exit") == 0){
+                    strcpy(buff, "OK");
+                    if( mq_send(queue_res,buff,3,0) == -1){
+                        perror("Ошибка отправки сообщения\n");
+                    }
+                    exit(EXIT_SUCCESS);
+                }
+                else if(cur_time<= time(NULL)){
                     int timer = 0;
                     cur_time = time(NULL);
                     convert_char_to_int(buff,&timer);
@@ -86,6 +101,5 @@ int init_driver(void** lenght_and_list){
             }
         }
     }else{
-        return 0;   
     }
 }

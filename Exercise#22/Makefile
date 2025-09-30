@@ -9,13 +9,13 @@ LIST_FUNC_DIR := list_function
 MENU_SCREN_DIR := menu_scren
 CONVERT_DIR := convert
 
-OBJ := bin/main.o
+OBJ := bin/main.o bin/kill_child_proc.o
 
 COMAND_FUNC_OBJ := bin/comand_function/create_driver.o bin/comand_function/del_driver.o \
-bin/comand_function/get_drivers.o bin/comand_function/get_status.o bin/comand_function/send_task.o
+bin/comand_function/get_drivers.o bin/comand_function/get_status.o bin/comand_function/send_task.o bin/comand_function/send_comand.o
 
 DRIVER_FUNC_OBJ := bin/driver_function/init_driver.o bin/driver_function/send_mess_to_driver.o bin/driver_function/init_qmess.o\
-bin/driver_function/init_mman.o bin/driver_function/close_mman.o
+bin/driver_function/init_mman.o bin/driver_function/close_mman.o bin/driver_function/reopen_shm.o
 
 LIST_FUNC_OBJ := bin/list_function/add.o bin/list_function/get_all.o bin/list_function/get.o
 
