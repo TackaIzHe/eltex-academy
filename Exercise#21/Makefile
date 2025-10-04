@@ -6,7 +6,7 @@ PROC_DIR := proc
 
 SERVER_DIR := server
 
-SERVER_OBJ := main.o
+SERVER_OBJ := server.o
 
 TOGETHER_OBJ := check_sum.o
 
