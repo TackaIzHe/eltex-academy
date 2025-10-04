@@ -1,3 +1,4 @@
-int get_mess(){
+
+int get_mess(int* fd, char* buff, int buff_lenght){
     
 }
