@@ -5,7 +5,7 @@
 #include "network_pseudo_title.h"
 #include "check_sum.h"
 
-int set_header(char** buff, int buff_lenght, char* data, struct sockaddr_in dest, struct sockaddr_in sourc){
+int set_header(char* buff, int buff_lenght, char* data, struct sockaddr_in dest, struct sockaddr_in sourc){
     char buffer[buff_lenght];
     struct udphdr hdr_udp;
     struct iphdr hdr_ip;
@@ -15,7 +15,7 @@ int set_header(char** buff, int buff_lenght, char* data, struct sockaddr_in dest
         strcat(data," ");
     }
     memset(buffer, 0, buff_lenght);
-    memset(*buff, 0, buff_lenght);
+    memset(buff, 0, buff_lenght);
 
     hdr_udp.dest = dest.sin_port;
     hdr_udp.source = sourc.sin_port;
@@ -47,10 +47,10 @@ int set_header(char** buff, int buff_lenght, char* data, struct sockaddr_in dest
     hdr_ip.check = 0;
     
 
-    memcpy(*buff, &hdr_ip, sizeof(hdr_ip));
-    memcpy(*buff+ sizeof(hdr_ip), &hdr_udp, sizeof(hdr_udp));
-    memcpy(*buff+ sizeof(hdr_ip) + sizeof(hdr_udp), data, strlen(data)+1);
-    hdr_ip.check = checksum(buffer, ( sizeof(pseudo_ip_title) + sizeof(hdr_udp) + (strlen(data)+1) ) / 2 );
-    memcpy(*buff, &hdr_ip, sizeof(hdr_ip));
+    memcpy(buff, &hdr_ip, sizeof(hdr_ip));
+    memcpy(buff+ sizeof(hdr_ip), &hdr_udp, sizeof(hdr_udp));
+    memcpy(buff+ sizeof(hdr_ip) + sizeof(hdr_udp), data, strlen(data)+1);
+    hdr_ip.check = checksum(buff, ( sizeof(pseudo_ip_title) + sizeof(hdr_udp) + (strlen(data)+1) ) / 2 );
+    memcpy(buff, &hdr_ip, sizeof(hdr_ip));
     
 }
