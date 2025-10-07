@@ -6,12 +6,17 @@
                 "${workspaceFolder}/**",
                 "/usr/include",
                 "/usr/local/include",
-                "/usr/include/netinet"
+                "/usr/include/netinet",
+                "/usr/src/linux/include",
+                "/usr/src/linux/arch/x86/include",
+                "/usr/lib/modules/6.16.10-arch1-1/build/arch/x86/include/generated"
             ],
             "defines": [
                 "_POSIX_C_SOURCE=199309L",
                 "_GNU_SOURCE",
-                "__USE_MISC"
+                "__USE_MISC",
+                "__KERNEL__",
+                "MODULE"
             ],
             "compilerPath": "/usr/bin/gcc",
             "cStandard": "c11",
